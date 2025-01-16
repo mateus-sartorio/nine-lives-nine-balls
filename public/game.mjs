@@ -68,7 +68,12 @@ function update() {
   staticCircle.update(context);
 
   if(getDistance(movingCircle.x, movingCircle.y, staticCircle.x, staticCircle.y) < movingCircle.radius + staticCircle.radius) {
-    console.log("Collision");
+    movingCircle.color = "red";
+    staticCircle.color = "red";
+  }
+  else {
+    movingCircle.color = "black";
+    staticCircle.color = "black";
   }
 }
 
