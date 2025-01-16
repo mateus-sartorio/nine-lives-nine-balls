@@ -17,6 +17,8 @@ class Circle {
     this.text = text;
     this.dx = 1 * speed;
     this.dy = 1 * speed;
+
+    this.collisionWithWallsCount = 0;
   }
 
   draw(context) {
@@ -26,7 +28,7 @@ class Circle {
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.font = `${this.radius/3}px Arial`
-    context.fillText(this.text, this.x, this.y);
+    context.fillText(`${this.text}`, this.x, this.y);
 
     context.strokeStyle = this.color;
     context.lineWidth = this.width;
@@ -36,29 +38,42 @@ class Circle {
   }
 
   update(context) {
-    context.clearRect(0, 0, canvas.width, canvas.height);
     this.draw(context);
 
     if(((this.x + this.radius) > canvas.width) || ((this.x - this.radius) < 0)) {
       this.dx = -this.dx;
+      this.collisionWithWallsCount++;
     }
 
     if(((this.y + this.radius) > canvas.height) || ((this.y - this.radius) < 0)) {
       this.dy = -this.dy;
+      this.collisionWithWallsCount++;
     }
 
     this.x += this.dx;
     this.y += this.dy;
-
   }
 }
 
-const circle = new Circle(100, 100, 50, "black", 1, "cool text", 10);
-circle.draw(context);
+const staticCircle = new Circle(200, 200, 100, "black", 2, "A", 0);
+staticCircle.draw(context);
+
+const movingCircle = new Circle(100, 100, 50, "black", 2, "B", 5);
+movingCircle.draw(context);
 
 function update() {
   requestAnimationFrame(update);
-  circle.update(context);
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  movingCircle.update(context);
+  staticCircle.update(context);
+
+  if(getDistance(movingCircle.x, movingCircle.y, staticCircle.x, staticCircle.y) < movingCircle.radius + staticCircle.radius) {
+    console.log("Collision");
+  }
+}
+
+function getDistance(x1, y1, x2, y2) {
+  return Math.sqrt(Math.pow((x2-x1), 2) + Math.pow((y2-y1), 2));
 }
 
 update();
