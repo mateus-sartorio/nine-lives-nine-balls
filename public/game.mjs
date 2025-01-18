@@ -136,6 +136,8 @@ data.forEach((value, index) => {
   context.lineTo(newDistance, value);
 })
 
+context.fillStyle = 'grey';
+context.fill();
 context.stroke();
 
 context.closePath();
