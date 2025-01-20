@@ -5,82 +5,132 @@ const socket = io();
 const canvas = document.getElementById('game-window');
 const context = canvas.getContext('2d');
 
-canvas.style.background = "yellow";
+const TEXT_PADDING = 10;
+const FONT_SIZE = 16;
 
-// class Circle {
-//   constructor(x, y, radius, color, width, text, speed) {
-//     this.x = x;
-//     this.y = y;
-//     this.radius = radius;
-//     this.color = color;
-//     this.width = width;
-//     this.text = text;
-//     this.dx = 1 * speed;
-//     this.dy = 1 * speed;
+canvas.style.background = "#222200";
+canvas.tabIndex = 0;
+canvas.focus();
 
-//     this.collisionWithWallsCount = 0;
-//   }
+function drawHud() {
+  context.font = `${FONT_SIZE}px "Press Start 2D"`;
+  context.fillStyle = "white";
 
-//   draw(context) {
-//     context.beginPath();
+  context.beginPath();
+  context.textAlign = "start";
+  context.fillText(`Controls: WASD`, TEXT_PADDING, FONT_SIZE + TEXT_PADDING);
+  context.closePath();
+  
+  context.beginPath();
+  context.textAlign = "end";
+  context.fillText(`Rank: 1 / 1`, canvas.width - TEXT_PADDING, FONT_SIZE + TEXT_PADDING);
+  context.closePath();
 
-//     context.strokeStyle = this.color;
-//     context.textAlign = "center";
-//     context.textBaseline = "middle";
-//     context.font = `${this.radius/3}px Arial`
-//     context.fillText(`${this.text}`, this.x, this.y);
+  context.beginPath();
+  const text = "Coin Race";
+  const textWidth = context.measureText(text).width;
+  context.textAlign = "start";
+  context.fillText(text, (canvas.width - textWidth)/2, FONT_SIZE + TEXT_PADDING);
+  context.closePath();
 
-//     context.strokeStyle = this.color;
-//     context.lineWidth = this.width;
-//     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-//     context.stroke();
-//     context.closePath();
-//   }
+  context.beginPath();
+  context.lineWidth = 1;
+  context.strokeStyle = 'white';
+  context.strokeRect(TEXT_PADDING, 2 * TEXT_PADDING + FONT_SIZE, canvas.width - 2 * TEXT_PADDING, canvas.height - 3 * TEXT_PADDING - FONT_SIZE);
+  context.closePath();
+}
 
-//   update(context) {
-//     this.draw(context);
+drawHud();
 
-//     if(((this.x + this.radius) > canvas.width) || ((this.x - this.radius) < 0)) {
-//       this.dx = -this.dx;
-//       this.collisionWithWallsCount++;
-//     }
+class Circle {
+  constructor(x, y, radius, color, width, text, speed) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.width = width;
+    this.text = text;
+    this.speed = speed;
 
-//     if(((this.y + this.radius) > canvas.height) || ((this.y - this.radius) < 0)) {
-//       this.dy = -this.dy;
-//       this.collisionWithWallsCount++;
-//     }
+    this.collisionWithWallsCount = 0;
+  }
 
-//     this.x += this.dx;
-//     this.y += this.dy;
-//   }
+  draw(context) {
+    context.beginPath();
 
-//   onClick(context) {
-//     console.log("Clicked");
-//   }
+    context.strokeStyle = this.color;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.font = `${this.radius/2}px Arial`
+    context.fillText(`${this.text}`, this.x, this.y);
+
+    context.strokeStyle = this.color;
+    context.lineWidth = this.width;
+    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    context.stroke();
+    context.closePath();
+  }
+
+  update(context) {
+    this.draw(context);
+
+    // if(((this.x + this.radius) > canvas.width) || ((this.x - this.radius) < 0)) {
+    //   this.dx = -this.dx;
+    //   this.collisionWithWallsCount++;
+    // }
+
+    // if(((this.y + this.radius) > canvas.height) || ((this.y - this.radius) < 0)) {
+    //   this.dy = -this.dy;
+    //   this.collisionWithWallsCount++;
+    // }
+
+    // this.x += this.dx;
+    // this.y += this.dy;
+  }
+}
+
+const staticCircle = new Circle(200, 200, 25, "white", 2, "A", 10);
+staticCircle.draw(context);
+
+canvas.addEventListener('keydown', (event) => {
+  switch(event.key) {
+    case 'w':
+    case 'W':
+      staticCircle.y -= staticCircle.speed;
+      break;
+    case 'a':
+    case 'A':
+      staticCircle.x -= staticCircle.speed;
+      break;
+    case 's':
+    case 'S':
+      staticCircle.y += staticCircle.speed;
+      break;
+    case 'd':
+    case 'D':
+      staticCircle.x += staticCircle.speed;
+      break;
+    default:
+      break;
+  }
+});
+
+function update() {
+  requestAnimationFrame(update);
+  context.clearRect(TEXT_PADDING + 1, 2 * TEXT_PADDING + FONT_SIZE + 1, canvas.width - 2 * TEXT_PADDING - 2, canvas.height - 3 * TEXT_PADDING - FONT_SIZE - 2);
+  staticCircle.update(context);
+}
+
+update();
+
+// if(getDistance(movingCircle.x, movingCircle.y, staticCircle.x, staticCircle.y) < movingCircle.radius + staticCircle.radius) {
+//   movingCircle.color = "red";
+//   staticCircle.color = "red";
 // }
-
-// const staticCircle = new Circle(200, 200, 100, "black", 2, "A", 0);
-// staticCircle.draw(context);
-
-// const movingCircle = new Circle(100, 100, 50, "black", 2, "B", 5);
-// movingCircle.draw(context);
-
-// function update() {
-//   requestAnimationFrame(update);
-//   context.clearRect(0, 0, canvas.width, canvas.height);
-//   movingCircle.update(context);
-//   staticCircle.update(context);
-
-//   if(getDistance(movingCircle.x, movingCircle.y, staticCircle.x, staticCircle.y) < movingCircle.radius + staticCircle.radius) {
-//     movingCircle.color = "red";
-//     staticCircle.color = "red";
-//   }
-//   else {
-//     movingCircle.color = "black";
-//     staticCircle.color = "black";
-//   }
+// else {
+//   movingCircle.color = "black";
+//   staticCircle.color = "black";
 // }
-
 // function getDistance(x1, y1, x2, y2) {
 //   return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
 // }
@@ -122,22 +172,22 @@ canvas.style.background = "yellow";
 //   }
 // });
 
-const data = [ 200, 150, 170, 100, 80, 50, 350, 200, 200, 230 ];
-const startValue = data[0];
-const distance = canvas.width / data.length;
-const startPoint = 0;
+// const data = [ 200, 150, 170, 100, 80, 50, 350, 200, 200, 230 ];
+// const startValue = data[0];
+// const distance = canvas.width / data.length;
+// const startPoint = 0;
 
-context.beginPath();
+// context.beginPath();
 
-context.moveTo(startPoint, startValue);
+// context.moveTo(startPoint, startValue);
 
-data.forEach((value, index) => {
-  const newDistance = startPoint + (distance * (index + 1));
-  context.lineTo(newDistance, value);
-})
+// data.forEach((value, index) => {
+//   const newDistance = startPoint + (distance * (index + 1));
+//   context.lineTo(newDistance, value);
+// })
 
-context.fillStyle = 'grey';
-context.fill();
-context.stroke();
+// context.fillStyle = 'grey';
+// context.fill();
+// context.stroke();
 
-context.closePath();
+// context.closePath();
