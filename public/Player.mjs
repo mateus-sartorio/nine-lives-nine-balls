@@ -10,7 +10,7 @@ const playerMoviments = new Map([
 ]);
 
 class Player {
-  constructor({x, y, score, id}) {
+  constructor({ x, y, score, id }) {
     this.x = x;
     this.y = y;
     this.score = score;
@@ -20,6 +20,8 @@ class Player {
   movePlayer(dir, speed) {
     this.x += playerMoviments.get(dir).x * speed;
     this.y += playerMoviments.get(dir).y * speed;
+
+    console.log({ x: this.x, y: this.y });
   }
 
   collision(item) {
@@ -28,6 +30,16 @@ class Player {
 
   calculateRank(arr) {
     return arr.sort((a, b) => b.score - a.score).findIndex(a => a.id === this.id) + 1;
+  }
+
+  draw(context, document) {
+    const image = document.createElement("img");
+    image.src = "/public/character.png";
+    image.alt = "test";
+
+    image.onload = () => {
+      context.drawImage(image, this.x, this.y, 36, 36);
+    }
   }
 }
 

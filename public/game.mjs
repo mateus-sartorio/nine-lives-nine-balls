@@ -8,9 +8,19 @@ const context = canvas.getContext('2d');
 const TEXT_PADDING = 10;
 const FONT_SIZE = 16;
 
+const PLAYER_SPEED = 10;
+
 canvas.style.background = "#222200";
 canvas.tabIndex = 0;
 canvas.focus();
+
+let playerList = [];
+
+const min = 50;
+const max = 300;
+function getRandomNumber() {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function drawHud() {
   context.font = `${FONT_SIZE}px "Press Start 2D"`;
@@ -42,86 +52,122 @@ function drawHud() {
 
 drawHud();
 
-class Circle {
-  constructor(x, y, radius, color, width, text, speed) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.color = color;
-    this.width = width;
-    this.text = text;
-    this.speed = speed;
+console.log(socket.id)
 
-    this.collisionWithWallsCount = 0;
-  }
+let player = new Player({ id: socket.id, x: getRandomNumber(), y: getRandomNumber(), score: 0, id: socket.id });
+socket.emit('player-move', player);
 
-  draw(context) {
-    context.beginPath();
+socket.on('player-list', (payload) => {
+  playerList = payload.map(player => new Player({ ...player }));
+  console.log(playerList);
+  update();
+});
 
-    context.strokeStyle = this.color;
-    context.textAlign = "center";
-    context.textBaseline = "middle";
-    context.font = `${this.radius/2}px Arial`
-    context.fillText(`${this.text}`, this.x, this.y);
+socket.on('update-player', (payload) => {
+  player = new Player({ ...player, ...payload });
+  console.log("player is: ", { player });
+});
 
-    context.strokeStyle = this.color;
-    context.lineWidth = this.width;
-    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    context.stroke();
-    context.closePath();
-  }
-
-  update(context) {
-    this.draw(context);
-
-    // if(((this.x + this.radius) > canvas.width) || ((this.x - this.radius) < 0)) {
-    //   this.dx = -this.dx;
-    //   this.collisionWithWallsCount++;
-    // }
-
-    // if(((this.y + this.radius) > canvas.height) || ((this.y - this.radius) < 0)) {
-    //   this.dy = -this.dy;
-    //   this.collisionWithWallsCount++;
-    // }
-
-    // this.x += this.dx;
-    // this.y += this.dy;
-  }
-}
-
-const staticCircle = new Circle(200, 200, 25, "white", 2, "A", 10);
-staticCircle.draw(context);
-
-canvas.addEventListener('keydown', (event) => {
+document.addEventListener('keydown', (event) => {
   switch(event.key) {
     case 'w':
     case 'W':
-      staticCircle.y -= staticCircle.speed;
+      player.movePlayer("UP", PLAYER_SPEED);
       break;
     case 'a':
     case 'A':
-      staticCircle.x -= staticCircle.speed;
+      player.movePlayer("LEFT", PLAYER_SPEED);
       break;
     case 's':
     case 'S':
-      staticCircle.y += staticCircle.speed;
+      player.movePlayer("DOWN", PLAYER_SPEED);
       break;
     case 'd':
     case 'D':
-      staticCircle.x += staticCircle.speed;
+      player.movePlayer("RIGHT", PLAYER_SPEED);
       break;
     default:
       break;
   }
+
+  console.log("sendin with", {player})
+
+  socket.emit('player-move', player);
 });
 
 function update() {
-  requestAnimationFrame(update);
-  context.clearRect(TEXT_PADDING + 1, 2 * TEXT_PADDING + FONT_SIZE + 1, canvas.width - 2 * TEXT_PADDING - 2, canvas.height - 3 * TEXT_PADDING - FONT_SIZE - 2);
-  staticCircle.update(context);
+  // requestAnimationFrame(update);
+  context.clearRect(TEXT_PADDING + 1, 2 * TEXT_PADDING + FONT_SIZE + 1, canvas.width - 2 * TEXT_PADDING - 1, canvas.height - 3 * TEXT_PADDING - FONT_SIZE - 1);
+  playerList.forEach(player => player.draw(context, document));
 }
 
-update();
+
+
+
+
+
+
+
+
+
+
+// class Circle {
+//   constructor(x, y, radius, color, width, text, speed) {
+//     this.x = x;
+//     this.y = y;
+//     this.radius = radius;
+//     this.color = color;
+//     this.width = width;
+//     this.text = text;
+//     this.speed = speed;
+
+//     this.collisionWithWallsCount = 0;
+//   }
+
+//   draw(context) {
+//     context.beginPath();
+
+//     context.strokeStyle = this.color;
+//     context.textAlign = "center";
+//     context.textBaseline = "middle";
+//     context.font = `${this.radius/2}px Arial`
+//     context.fillText(`${this.text}`, this.x, this.y);
+
+//     context.strokeStyle = this.color;
+//     context.lineWidth = this.width;
+//     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+//     context.stroke();
+//     context.closePath();
+//   }
+
+//   update(context) {
+//     this.draw(context);
+
+//     // if(((this.x + this.radius) > canvas.width) || ((this.x - this.radius) < 0)) {
+//     //   this.dx = -this.dx;
+//     //   this.collisionWithWallsCount++;
+//     // }
+
+//     // if(((this.y + this.radius) > canvas.height) || ((this.y - this.radius) < 0)) {
+//     //   this.dy = -this.dy;
+//     //   this.collisionWithWallsCount++;
+//     // }
+
+//     // this.x += this.dx;
+//     // this.y += this.dy;
+//   }
+// }
+
+// const staticCircle = new Circle(200, 200, 25, "white", 2, "A", 10);
+// staticCircle.draw(context);
+
+// function update() {
+//   requestAnimationFrame(update);
+//   context.clearRect(TEXT_PADDING + 1, 2 * TEXT_PADDING + FONT_SIZE + 1, canvas.width - 2 * TEXT_PADDING - 2, canvas.height - 3 * TEXT_PADDING - FONT_SIZE - 2);
+//   staticCircle.update(context);
+// }
+
+// update();
 
 // if(getDistance(movingCircle.x, movingCircle.y, staticCircle.x, staticCircle.y) < movingCircle.radius + staticCircle.radius) {
 //   movingCircle.color = "red";

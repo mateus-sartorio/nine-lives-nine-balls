@@ -46,14 +46,35 @@ app.use(function(req, res, next) {
 
 const portNum = process.env.PORT || 3000;
 
+let serverList = []
+
 io.on('connection', socket => {
   console.log('A user has connected');
+
+  const newPlayerInfo = { score: 0, id: socket.id };
+  serverList.push(newPlayerInfo);
+
+  io.emit('player-list', serverList);
+  socket.emit('update-player', newPlayerInfo);
+
+  socket.on('disconnect', () => {
+    console.log('A user has disconnected');
+  
+    serverList = serverList.filter(player => player.id !== socket.id);
+  
+    io.emit('player-list', serverList);
+  });
+
+  socket.on('player-move', (payload) => {
+    serverList = serverList.map(player => player.id !== socket.id ? player : { ...payload });
+    io.emit('player-list', serverList);
+  });
 });
 
 // Set up server and tests
 server.listen(portNum, () => {
   console.log(`Listening on port ${portNum}`);
-  if (process.env.NODE_ENV==='test') {
+  if (process.env.NODE_ENV === 'test') {
     console.log('Running Tests...');
     setTimeout(function () {
       try {
