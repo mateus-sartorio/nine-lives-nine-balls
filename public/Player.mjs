@@ -1,13 +1,13 @@
-const playerMoviments = {
-  up: { x: 0, y: -1 },
-  down: { x: 0, y: 1 },
-  left: { x: -1, y: 0 },
-  right: { x: 1, y: 0 },
-  diagonalUpRight: { x: 1, y: -1 },
-  diagonalUpLeft: { x: -1, y: -1 },
-  diagonalDownRight: { x: 1, y: 1 },
-  diagonalDownLeft: { x: -1, y: 1 }
-};
+const playerMoviments = new Map([
+  [ "UP", { x: 0, y: -1 } ],
+  [ "DOWN", { x: 0, y: 1 } ],
+  [ "LEFT", { x: -1, y: 0 } ],
+  [ "RIGHT", { x: 1, y: 0 } ],
+  [ "DIAGONAL_UP_RIGHT", { x: 1, y: -1 } ],
+  [ "DIAGONAL_UP_LEFT", { x: -1, y: -1 } ],
+  [ "DIAGONAL_DOWN_RIGHT", { x: 1, y: 1 } ],
+  [ "DIAGONAL_DOWN_LEFT", { x: -1, y: 1 } ]
+]);
 
 class Player {
   constructor({x, y, score, id}) {
@@ -18,8 +18,8 @@ class Player {
   }
 
   movePlayer(dir, speed) {
-    this.x += playerMoviments[dir].x * speed;
-    this.y += playerMoviments[dir].y * speed;
+    this.x += playerMoviments.get(dir).x * speed;
+    this.y += playerMoviments.get(dir).y * speed;
   }
 
   collision(item) {
