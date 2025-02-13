@@ -6,6 +6,8 @@ const { createServer } = require('http');
 const socket = require('socket.io');
 const cors = require('cors');
 const helmet = require('helmet');
+const { getRandomNumber } = require('./utils.js');
+const { uuid } = require('uuidv4');
 
 const fccTestingRoutes = require('./routes/fcctesting.js');
 const runner = require('./test-runner.js');
@@ -46,28 +48,43 @@ app.use(function(req, res, next) {
 
 const portNum = process.env.PORT || 3000;
 
-let serverList = []
+let playerList = [];
+let collectiblesList = [];
+
+setInterval(() => {
+  if(collectiblesList.length < 10* playerList.length) {
+    collectiblesList.push({ id: uuid(), x: getRandomNumber(), y: getRandomNumber(), value: 1 });
+    io.emit('collectibles-list', collectiblesList);
+  }
+}, 1000);
 
 io.on('connection', socket => {
   console.log('A user has connected');
 
-  const newPlayerInfo = { score: 0, id: socket.id };
-  serverList.push(newPlayerInfo);
+  const newPlayer = { id: socket.id, x: getRandomNumber(), y: getRandomNumber(), score: 0 };
+  playerList.push(newPlayer);
 
-  io.emit('player-list', serverList);
-  socket.emit('update-player', newPlayerInfo);
+  io.emit('collectibles-list', collectiblesList);
+  io.emit('player-list', playerList);
+  socket.emit('update-player', newPlayer);
 
   socket.on('disconnect', () => {
     console.log('A user has disconnected');
   
-    serverList = serverList.filter(player => player.id !== socket.id);
+    playerList = playerList.filter(player => player.id !== socket.id);
   
-    io.emit('player-list', serverList);
+    io.emit('player-list', playerList);
   });
 
   socket.on('player-move', (payload) => {
-    serverList = serverList.map(player => player.id !== socket.id ? player : { ...payload });
-    io.emit('player-list', serverList);
+    playerList = playerList.map(player => player.id !== socket.id ? player : { ...payload });
+    io.emit('player-list', playerList);
+    socket.emit('update-player', payload);
+  });
+
+  socket.on('collect', (payload) => {
+    collectiblesList = collectiblesList.filter(collectible => collectible.id !== payload.id);
+    io.emit('collectibles-list', collectiblesList);
   });
 });
 

@@ -6,6 +6,15 @@ class Collectible {
     this.id = id;
   }
 
+  draw(context, document) {
+    const image = document.createElement("img");
+    image.src = "/public/item.png";
+    image.alt = "test";
+
+    image.onload = () => {
+      context.drawImage(image, this.x, this.y, 36, 36);
+    }
+  }
 }
 
 /*

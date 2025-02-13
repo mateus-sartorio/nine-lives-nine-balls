@@ -1,3 +1,5 @@
+const PLAYER_SIZE = 36;
+
 const playerMoviments = new Map([
   [ "UP", { x: 0, y: -1 } ],
   [ "DOWN", { x: 0, y: 1 } ],
@@ -21,7 +23,7 @@ class Player {
     this.x += playerMoviments.get(dir).x * speed;
     this.y += playerMoviments.get(dir).y * speed;
 
-    console.log({ x: this.x, y: this.y });
+    console.log("Player after it moved: ", { x: this.x, y: this.y });
   }
 
   collision(item) {
@@ -38,7 +40,7 @@ class Player {
     image.alt = "test";
 
     image.onload = () => {
-      context.drawImage(image, this.x, this.y, 36, 36);
+      context.drawImage(image, this.x, this.y, PLAYER_SIZE, PLAYER_SIZE);
     }
   }
 }
