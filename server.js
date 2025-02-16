@@ -5,7 +5,7 @@ const { createServer } = require('http');
 const socket = require('socket.io');
 const cors = require('cors');
 const helmet = require('helmet');
-const { getRandomPosition } = require('./utils.js');
+const { getRandomPosition, getRandomNumber } = require('./utils.js');
 const { uuid } = require('uuidv4');
 const {
   PLAYER_SIZE,
@@ -59,7 +59,7 @@ setInterval(() => {
 io.on('connection', socket => {
   console.log('A user has connected');
 
-  const newPlayer = { id: socket.id, ...getRandomPosition(PLAYER_SIZE), score: 0 };
+  const newPlayer = { id: socket.id, ...getRandomPosition(PLAYER_SIZE), score: 0, playerImageIndex: getRandomNumber({ min: 1, max: 9 }) };
   playerList.push(newPlayer);
 
   io.emit('collectibles-list', collectiblesList);

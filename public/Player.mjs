@@ -9,9 +9,6 @@ import {
 export const PLAYER_SIZE = 36;
 const PLAYER_SPEED = 10;
 
-const playerImage = new Image();
-playerImage.src = '/public/character.png';
-
 const diagnonalMovementCorrectionFactor = 1/Math.sqrt(2);
 
 const playerMoviments = new Map([
@@ -26,11 +23,14 @@ const playerMoviments = new Map([
 ]);
 
 class Player {
-  constructor({ x, y, score, id }) {
+  constructor({ x, y, score, id, playerImageIndex }) {
     this.x = x;
     this.y = y;
     this.score = score;
     this.id = id;
+    this.playerImage =  new Image();
+    this.playerImageIndex = playerImageIndex;
+    this.playerImage.src = `/public/assets/cat_${playerImageIndex}.png`;
   }
 
   movePlayer(dir) {
@@ -63,8 +63,8 @@ class Player {
   }
 
   draw(context) {
-    if (playerImage.complete) {
-      context.drawImage(playerImage, this.x, this.y, PLAYER_SIZE, PLAYER_SIZE);
+    if (this.playerImage.complete) {
+      context.drawImage(this.playerImage, this.x, this.y, PLAYER_SIZE, PLAYER_SIZE);
     }
   }
 }
