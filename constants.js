@@ -6,6 +6,18 @@ const LINE_WIDTH = 1;
 const PLAYER_SIZE = 36;
 const COLLECTBLE_SIZE = 36;
 
+const INDEX_TO_COLLECTIBLE_VALUE_MAP = (value) => {
+  if(value <= 24) {
+    return 1;
+  }
+
+  if(value <= 32) {
+    return 3;
+  }
+
+  return 8;
+};
+
 module.exports = {
   TEXT_PADDING,
   FONT_SIZE,
@@ -13,5 +25,6 @@ module.exports = {
   CANVAS_HEIGHT,
   LINE_WIDTH,
   PLAYER_SIZE,
-  COLLECTBLE_SIZE
+  COLLECTBLE_SIZE,
+  INDEX_TO_COLLECTIBLE_VALUE_MAP
 };

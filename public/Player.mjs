@@ -30,7 +30,7 @@ class Player {
     this.id = id;
     this.playerImage =  new Image();
     this.playerImageIndex = playerImageIndex;
-    this.playerImage.src = `/public/assets/cat_${playerImageIndex}.png`;
+    this.playerImage.src = `/public/assets/player/cat_${playerImageIndex}.png`;
   }
 
   movePlayer(dir) {

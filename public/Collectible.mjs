@@ -1,19 +1,18 @@
 export const COLLECTBLE_SIZE = 36;
 
-const collectibleImage = new Image();
-collectibleImage.src = '/public/item.png';
-
 class Collectible {
   constructor({ x, y, value, id }) {
     this.x = x;
     this.y = y;
     this.value = value;
     this.id = id;
+    this.collectibleImage = new Image();
+    this.collectibleImage.src = `/public/assets/collectibles/ball_${value}.png`;
   }
 
   draw(context) {
-    if (collectibleImage.complete) {
-      context.drawImage(collectibleImage, this.x, this.y, COLLECTBLE_SIZE, COLLECTBLE_SIZE);
+    if (this.collectibleImage.complete) {
+      context.drawImage(this.collectibleImage, this.x, this.y, COLLECTBLE_SIZE, COLLECTBLE_SIZE);
     }
   }
 }

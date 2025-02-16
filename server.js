@@ -9,7 +9,8 @@ const { getRandomPosition, getRandomNumber } = require('./utils.js');
 const { uuid } = require('uuidv4');
 const {
   PLAYER_SIZE,
-  COLLECTBLE_SIZE
+  COLLECTBLE_SIZE,
+  INDEX_TO_COLLECTIBLE_VALUE_MAP
 } = require('./constants.js');
 
 const app = express();
@@ -51,7 +52,12 @@ let collectiblesList = [];
 
 setInterval(() => {
   if(collectiblesList.length < 10 * playerList.length) {
-    collectiblesList.push({ id: uuid(), ...getRandomPosition(COLLECTBLE_SIZE), value: 1 });
+    collectiblesList.push({
+      id: uuid(),
+      ...getRandomPosition(COLLECTBLE_SIZE),
+      value: INDEX_TO_COLLECTIBLE_VALUE_MAP(getRandomNumber({ min: 1, max: 35 }))
+    });
+
     io.emit('collectibles-list', collectiblesList);
   }
 }, 1000);

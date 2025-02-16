@@ -1,7 +1,7 @@
 import Player, { PLAYER_SIZE } from './Player.mjs';
 import Collectible, { COLLECTBLE_SIZE } from './Collectible.mjs';
-import {  distance } from './utils.mjs';
-import {  TEXT_PADDING, FONT_SIZE, LINE_WIDTH } from './constants.mjs';
+import { distance } from './utils.mjs';
+import { TEXT_PADDING, FONT_SIZE, LINE_WIDTH } from './constants.mjs';
 
 const socket = io();
 const canvas = document.getElementById('game-window');
@@ -47,7 +47,14 @@ function drawHud(targetContext) {
   targetContext.beginPath();
   targetContext.lineWidth = LINE_WIDTH;
   targetContext.strokeStyle = 'white';
-  targetContext.strokeRect(TEXT_PADDING, 2 * TEXT_PADDING + FONT_SIZE, canvas.width - 2 * TEXT_PADDING, canvas.height - 3 * TEXT_PADDING - FONT_SIZE);
+  
+  targetContext.strokeRect(
+    TEXT_PADDING,
+    2 * TEXT_PADDING + FONT_SIZE,
+    canvas.width - 2 * TEXT_PADDING,
+    canvas.height - 3 * TEXT_PADDING - FONT_SIZE
+  );
+
   targetContext.closePath();
 }
 
