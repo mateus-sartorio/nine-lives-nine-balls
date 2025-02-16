@@ -1,5 +1,5 @@
 import Player, { PLAYER_SIZE } from './Player.mjs';
-import Collectible, { COLLECTBLE_SIZE } from './Collectible.mjs';
+import Collectible, { COLLECTIBLE_SIZE } from './Collectible.mjs';
 import { distance } from './utils.mjs';
 import { TEXT_PADDING, FONT_SIZE, LINE_WIDTH } from './constants.mjs';
 
@@ -123,7 +123,7 @@ function update() {
   bufferContext.fillRect(0, 0, buffer.width, buffer.height);
 
   collectiblesList.forEach(collectible => {
-    if(player && distance(player.x, player.y, collectible.x, collectible.y) < PLAYER_SIZE + COLLECTBLE_SIZE) {
+    if(player && distance(player.x, player.y, collectible.x, collectible.y) < PLAYER_SIZE + COLLECTIBLE_SIZE) {
       player.collision(collectible);
       socket.emit('collect', collectible);
       socket.emit('player-move', player);

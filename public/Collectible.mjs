@@ -1,4 +1,4 @@
-export const COLLECTBLE_SIZE = 36;
+export const COLLECTIBLE_SIZE = 30;
 
 class Collectible {
   constructor({ x, y, value, id }) {
@@ -12,7 +12,7 @@ class Collectible {
 
   draw(context) {
     if (this.collectibleImage.complete) {
-      context.drawImage(this.collectibleImage, this.x, this.y, COLLECTBLE_SIZE, COLLECTBLE_SIZE);
+      context.drawImage(this.collectibleImage, this.x, this.y, COLLECTIBLE_SIZE, COLLECTIBLE_SIZE);
     }
   }
 }

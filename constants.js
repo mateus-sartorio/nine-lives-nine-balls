@@ -4,7 +4,7 @@ const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 480;
 const LINE_WIDTH = 1;
 const PLAYER_SIZE = 36;
-const COLLECTBLE_SIZE = 36;
+const COLLECTIBLE_SIZE = 30;
 
 const INDEX_TO_COLLECTIBLE_VALUE_MAP = (value) => {
   if(value <= 24) {
@@ -25,6 +25,6 @@ module.exports = {
   CANVAS_HEIGHT,
   LINE_WIDTH,
   PLAYER_SIZE,
-  COLLECTBLE_SIZE,
+  COLLECTIBLE_SIZE,
   INDEX_TO_COLLECTIBLE_VALUE_MAP
 };

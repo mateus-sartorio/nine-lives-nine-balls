@@ -9,7 +9,7 @@ const { getRandomPosition, getRandomNumber } = require('./utils.js');
 const { uuid } = require('uuidv4');
 const {
   PLAYER_SIZE,
-  COLLECTBLE_SIZE,
+  COLLECTIBLE_SIZE,
   INDEX_TO_COLLECTIBLE_VALUE_MAP
 } = require('./constants.js');
 
@@ -51,10 +51,10 @@ let playerList = [];
 let collectiblesList = [];
 
 setInterval(() => {
-  if(collectiblesList.length < 10 * playerList.length) {
+  if(collectiblesList.length < 20 && collectiblesList.length < 5 * playerList.length) {
     collectiblesList.push({
       id: uuid(),
-      ...getRandomPosition(COLLECTBLE_SIZE),
+      ...getRandomPosition(COLLECTIBLE_SIZE),
       value: INDEX_TO_COLLECTIBLE_VALUE_MAP(getRandomNumber({ min: 1, max: 35 }))
     });
 
