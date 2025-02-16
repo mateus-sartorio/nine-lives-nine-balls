@@ -1,4 +1,12 @@
-const PLAYER_SIZE = 36;
+import {
+  TEXT_PADDING,
+  FONT_SIZE,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+  LINE_WIDTH
+} from './constants.mjs';
+
+export const PLAYER_SIZE = 36;
 const PLAYER_SPEED = 10;
 
 const playerImage = new Image();
@@ -29,7 +37,21 @@ class Player {
     this.x += playerMoviments.get(dir).x * PLAYER_SPEED;
     this.y += playerMoviments.get(dir).y * PLAYER_SPEED;
 
-    console.log("Player after it moved: ", { x: this.x, y: this.y });
+    if(this.x < TEXT_PADDING + LINE_WIDTH) {
+      this.x = TEXT_PADDING + LINE_WIDTH;
+    }
+
+    if(this.x > CANVAS_WIDTH - PLAYER_SIZE - TEXT_PADDING - LINE_WIDTH) {
+      this.x = CANVAS_WIDTH - PLAYER_SIZE - TEXT_PADDING - LINE_WIDTH;
+    }
+
+    if(this.y < 2 * TEXT_PADDING + FONT_SIZE + LINE_WIDTH) {
+      this.y = 2 * TEXT_PADDING + FONT_SIZE + LINE_WIDTH;
+    }
+
+    if(this.y > CANVAS_HEIGHT - PLAYER_SIZE - TEXT_PADDING - LINE_WIDTH) {
+      this.y = CANVAS_HEIGHT - PLAYER_SIZE - TEXT_PADDING - LINE_WIDTH;
+    }
   }
 
   collision(item) {
@@ -40,7 +62,7 @@ class Player {
     return arr.sort((a, b) => b.score - a.score).findIndex(a => a.id === this.id) + 1;
   }
 
-  draw(context, document) {
+  draw(context) {
     if (playerImage.complete) {
       context.drawImage(playerImage, this.x, this.y, PLAYER_SIZE, PLAYER_SIZE);
     }

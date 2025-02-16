@@ -1,12 +1,11 @@
-import Player from './Player.mjs';
-import Collectible from './Collectible.mjs';
+import Player, { PLAYER_SIZE } from './Player.mjs';
+import Collectible, { COLLECTBLE_SIZE } from './Collectible.mjs';
+import {  distance } from './utils.mjs';
+import {  TEXT_PADDING, FONT_SIZE, LINE_WIDTH } from './constants.mjs';
 
 const socket = io();
 const canvas = document.getElementById('game-window');
 const context = canvas.getContext('2d');
-
-const TEXT_PADDING = 10;
-const FONT_SIZE = 16;
 
 canvas.style.background = "#222200";
 canvas.tabIndex = 0;
@@ -46,7 +45,7 @@ function drawHud(targetContext) {
   targetContext.closePath();
 
   targetContext.beginPath();
-  targetContext.lineWidth = 1;
+  targetContext.lineWidth = LINE_WIDTH;
   targetContext.strokeStyle = 'white';
   targetContext.strokeRect(TEXT_PADDING, 2 * TEXT_PADDING + FONT_SIZE, canvas.width - 2 * TEXT_PADDING, canvas.height - 3 * TEXT_PADDING - FONT_SIZE);
   targetContext.closePath();
@@ -84,24 +83,30 @@ function areKeysPressed(...keys) {
 function handleMovement() {
   if (areKeysPressed('w', 'a')) {
     player.movePlayer("DIAGONAL_UP_LEFT");
-  } else if (areKeysPressed('w', 'd')) {
+  }
+  else if (areKeysPressed('w', 'd')) {
     player.movePlayer("DIAGONAL_UP_RIGHT");
-  } else if (areKeysPressed('s', 'a')) {
+  }
+  else if (areKeysPressed('s', 'a')) {
     player.movePlayer("DIAGONAL_DOWN_LEFT");
-  } else if (areKeysPressed('s', 'd')) {
+  }
+  else if (areKeysPressed('s', 'd')) {
     player.movePlayer("DIAGONAL_DOWN_RIGHT");
-  } else if (keysPressed['w']) {
+  }
+  else if (areKeysPressed('w')) {
     player.movePlayer("UP");
-  } else if (keysPressed['a']) {
+  }
+  else if (areKeysPressed('a')) {
     player.movePlayer("LEFT");
-  } else if (keysPressed['s']) {
+  }
+  else if (areKeysPressed('s')) {
     player.movePlayer("DOWN");
-  } else if (keysPressed['d']) {
+  }
+  else if (areKeysPressed('d')) {
     player.movePlayer("RIGHT");
   }
 
   socket.emit('player-move', player);
-
 }
 
 function update() {
@@ -110,7 +115,7 @@ function update() {
   bufferContext.fillRect(0, 0, buffer.width, buffer.height);
 
   collectiblesList.forEach(collectible => {
-    if(player && distance(player.x, player.y, collectible.x, collectible.y) < 46) {
+    if(player && distance(player.x, player.y, collectible.x, collectible.y) < PLAYER_SIZE + COLLECTBLE_SIZE) {
       player.collision(collectible);
       socket.emit('collect', collectible);
       socket.emit('player-move', player);
@@ -119,8 +124,8 @@ function update() {
 
   drawHud(bufferContext);
 
-  playerList.forEach(player => player.draw(bufferContext, document));
-  collectiblesList.forEach(collectible => collectible.draw(bufferContext, document));
+  playerList.forEach(player => player.draw(bufferContext));
+  collectiblesList.forEach(collectible => collectible.draw(bufferContext));
 
   // Draw buffer to main canvas
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -130,8 +135,3 @@ function update() {
 setInterval(() => {
   update();
 }, 16);
-
-
-function distance(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
-}

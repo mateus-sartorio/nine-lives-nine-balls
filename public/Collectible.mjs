@@ -1,4 +1,4 @@
-const COLLECTBLE_SIZE = 36;
+export const COLLECTBLE_SIZE = 36;
 
 const collectibleImage = new Image();
 collectibleImage.src = '/public/item.png';
@@ -11,7 +11,7 @@ class Collectible {
     this.id = id;
   }
 
-  draw(context, document) {
+  draw(context) {
     if (collectibleImage.complete) {
       context.drawImage(collectibleImage, this.x, this.y, COLLECTBLE_SIZE, COLLECTBLE_SIZE);
     }
