@@ -12,9 +12,6 @@ const {
   COLLECTBLE_SIZE
 } = require('./constants.js');
 
-const fccTestingRoutes = require('./routes/fcctesting.js');
-const runner = require('./test-runner.js');
-
 const app = express();
 const server = createServer(app);
 const io = socket(server);
@@ -34,13 +31,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({origin: '*'})); 
 
 // Index page (static HTML)
-app.route('/')
+app
+  .route('/')
   .get(function (_req, res) {
     res.sendFile(process.cwd() + '/views/index.html');
   }); 
-
-//For FCC testing purposes
-fccTestingRoutes(app);
     
 // 404 Not Found Middleware
 app.use(function(_req, res) {
@@ -94,17 +89,6 @@ io.on('connection', socket => {
 // Set up server and tests
 server.listen(portNum, () => {
   console.log(`Listening on port ${portNum}`);
-  if (process.env.NODE_ENV === 'test') {
-    console.log('Running Tests...');
-    setTimeout(function () {
-      try {
-        runner.run();
-      } catch (error) {
-        console.log('Tests are not valid:');
-        console.error(error);
-      }
-    }, 1500);
-  }
 });
 
-module.exports = app; // For testing
+module.exports = app;
