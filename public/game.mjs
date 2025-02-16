@@ -8,8 +8,6 @@ const context = canvas.getContext('2d');
 const TEXT_PADDING = 10;
 const FONT_SIZE = 16;
 
-const PLAYER_SPEED = 10;
-
 canvas.style.background = "#222200";
 canvas.tabIndex = 0;
 canvas.focus();
@@ -19,6 +17,8 @@ const buffer = document.createElement('canvas');
 buffer.width = canvas.width;
 buffer.height = canvas.height;
 const bufferContext = buffer.getContext('2d');
+
+const keysPressed = {};
 
 let player;
 let playerList = [];
@@ -64,30 +64,45 @@ socket.on('collectibles-list', (payload) => {
   collectiblesList = payload.map(collectible => new Collectible({ ...collectible }));
 });
 
+// Event listeners to update key states
 document.addEventListener('keydown', (event) => {
-  switch(event.key) {
-    case 'w':
-    case 'W':
-      player.movePlayer("UP", PLAYER_SPEED);
-      break;
-    case 'a':
-    case 'A':
-      player.movePlayer("LEFT", PLAYER_SPEED);
-      break;
-    case 's':
-    case 'S':
-      player.movePlayer("DOWN", PLAYER_SPEED);
-      break;
-    case 'd':
-    case 'D':
-      player.movePlayer("RIGHT", PLAYER_SPEED);
-      break;
-    default:
-      break;
+  keysPressed[event.key] = true; // Mark key as pressed
+  handleMovement();
+});
+
+document.addEventListener('keyup', (event) => {
+  keysPressed[event.key] = false; // Mark key as released
+  handleMovement();
+});
+
+// Function to check if multiple keys are pressed
+function areKeysPressed(...keys) {
+  return keys.every(key => keysPressed[key]);
+}
+
+// Example usage in your game loop or event handler
+function handleMovement() {
+  if (areKeysPressed('w', 'a')) {
+    player.movePlayer("DIAGONAL_UP_LEFT");
+  } else if (areKeysPressed('w', 'd')) {
+    player.movePlayer("DIAGONAL_UP_RIGHT");
+  } else if (areKeysPressed('s', 'a')) {
+    player.movePlayer("DIAGONAL_DOWN_LEFT");
+  } else if (areKeysPressed('s', 'd')) {
+    player.movePlayer("DIAGONAL_DOWN_RIGHT");
+  } else if (keysPressed['w']) {
+    player.movePlayer("UP");
+  } else if (keysPressed['a']) {
+    player.movePlayer("LEFT");
+  } else if (keysPressed['s']) {
+    player.movePlayer("DOWN");
+  } else if (keysPressed['d']) {
+    player.movePlayer("RIGHT");
   }
 
   socket.emit('player-move', player);
-});
+
+}
 
 function update() {
   // Clear buffer with background color
@@ -114,7 +129,7 @@ function update() {
 
 setInterval(() => {
   update();
-}, 32);
+}, 16);
 
 
 function distance(x1, y1, x2, y2) {
