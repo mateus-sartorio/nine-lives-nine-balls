@@ -1,3 +1,8 @@
+const COLLECTBLE_SIZE = 36;
+
+const collectibleImage = new Image();
+collectibleImage.src = '/public/item.png';
+
 class Collectible {
   constructor({ x, y, value, id }) {
     this.x = x;
@@ -7,12 +12,8 @@ class Collectible {
   }
 
   draw(context, document) {
-    const image = document.createElement("img");
-    image.src = "/public/item.png";
-    image.alt = "test";
-
-    image.onload = () => {
-      context.drawImage(image, this.x, this.y, 36, 36);
+    if (collectibleImage.complete) {
+      context.drawImage(collectibleImage, this.x, this.y, COLLECTBLE_SIZE, COLLECTBLE_SIZE);
     }
   }
 }

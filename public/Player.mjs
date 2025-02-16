@@ -1,5 +1,8 @@
 const PLAYER_SIZE = 36;
 
+const playerImage = new Image();
+playerImage.src = '/public/character.png';
+
 const playerMoviments = new Map([
   [ "UP", { x: 0, y: -1 } ],
   [ "DOWN", { x: 0, y: 1 } ],
@@ -35,12 +38,8 @@ class Player {
   }
 
   draw(context, document) {
-    const image = document.createElement("img");
-    image.src = "/public/character.png";
-    image.alt = "test";
-
-    image.onload = () => {
-      context.drawImage(image, this.x, this.y, PLAYER_SIZE, PLAYER_SIZE);
+    if (playerImage.complete) {
+      context.drawImage(playerImage, this.x, this.y, PLAYER_SIZE, PLAYER_SIZE);
     }
   }
 }

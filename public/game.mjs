@@ -14,39 +14,43 @@ canvas.style.background = "#222200";
 canvas.tabIndex = 0;
 canvas.focus();
 
+// Double buffering setup
+const buffer = document.createElement('canvas');
+buffer.width = canvas.width;
+buffer.height = canvas.height;
+const bufferContext = buffer.getContext('2d');
+
 let player;
 let playerList = [];
 let collectiblesList = [];
 
-function drawHud() {
-  context.font = `${FONT_SIZE}px "Press Start 2D"`;
-  context.fillStyle = "white";
+function drawHud(targetContext) {
+  targetContext.font = `${FONT_SIZE}px "Press Start 2D"`;
+  targetContext.fillStyle = "white";
 
-  context.beginPath();
-  context.textAlign = "start";
-  context.fillText(`Controls: WASD`, TEXT_PADDING, FONT_SIZE + TEXT_PADDING);
-  context.closePath();
+  targetContext.beginPath();
+  targetContext.textAlign = "start";
+  targetContext.fillText(`Controls: WASD`, TEXT_PADDING, FONT_SIZE + TEXT_PADDING);
+  targetContext.closePath();
   
-  context.beginPath();
-  context.textAlign = "end";
-  context.fillText(`Rank: ${ player?.calculateRank(playerList) ?? 0 } / ${playerList.length}`, canvas.width - TEXT_PADDING, FONT_SIZE + TEXT_PADDING);
-  context.closePath();
+  targetContext.beginPath();
+  targetContext.textAlign = "end";
+  targetContext.fillText(`Rank: ${ player?.calculateRank(playerList) ?? 0 } / ${playerList.length}`, canvas.width - TEXT_PADDING, FONT_SIZE + TEXT_PADDING);
+  targetContext.closePath();
 
-  context.beginPath();
+  targetContext.beginPath();
   const text = `Score: ${player?.score ?? 0}`;
-  const textWidth = context.measureText(text).width;
-  context.textAlign = "start";
-  context.fillText(text, (canvas.width - textWidth)/2, FONT_SIZE + TEXT_PADDING);
-  context.closePath();
+  const textWidth = targetContext.measureText(text).width;
+  targetContext.textAlign = "start";
+  targetContext.fillText(text, (canvas.width - textWidth)/2, FONT_SIZE + TEXT_PADDING);
+  targetContext.closePath();
 
-  context.beginPath();
-  context.lineWidth = 1;
-  context.strokeStyle = 'white';
-  context.strokeRect(TEXT_PADDING, 2 * TEXT_PADDING + FONT_SIZE, canvas.width - 2 * TEXT_PADDING, canvas.height - 3 * TEXT_PADDING - FONT_SIZE);
-  context.closePath();
+  targetContext.beginPath();
+  targetContext.lineWidth = 1;
+  targetContext.strokeStyle = 'white';
+  targetContext.strokeRect(TEXT_PADDING, 2 * TEXT_PADDING + FONT_SIZE, canvas.width - 2 * TEXT_PADDING, canvas.height - 3 * TEXT_PADDING - FONT_SIZE);
+  targetContext.closePath();
 }
-
-drawHud();
 
 socket.on('player-list', (payload) => {
   playerList = payload.map(player => new Player({ ...player }));
@@ -86,7 +90,9 @@ document.addEventListener('keydown', (event) => {
 });
 
 function update() {
-  context.clearRect(0, 0, canvas.width, canvas.height);
+  // Clear buffer with background color
+  bufferContext.fillStyle = "#222200";
+  bufferContext.fillRect(0, 0, buffer.width, buffer.height);
 
   collectiblesList.forEach(collectible => {
     if(player && distance(player.x, player.y, collectible.x, collectible.y) < 46) {
@@ -96,10 +102,14 @@ function update() {
     }
   });
 
-  drawHud();
+  drawHud(bufferContext);
 
-  playerList.forEach(player => player.draw(context, document));
-  collectiblesList.forEach(collectible => collectible.draw(context, document));
+  playerList.forEach(player => player.draw(bufferContext, document));
+  collectiblesList.forEach(collectible => collectible.draw(bufferContext, document));
+
+  // Draw buffer to main canvas
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(buffer, 0, 0);
 }
 
 setInterval(() => {
