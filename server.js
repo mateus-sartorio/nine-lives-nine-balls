@@ -1,13 +1,16 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const expect = require('chai');
 const { createServer } = require('http');
 const socket = require('socket.io');
 const cors = require('cors');
 const helmet = require('helmet');
-const { getRandomNumber } = require('./utils.js');
+const { getRandomPosition } = require('./utils.js');
 const { uuid } = require('uuidv4');
+const {
+  PLAYER_SIZE,
+  COLLECTBLE_SIZE
+} = require('./constants.js');
 
 const fccTestingRoutes = require('./routes/fcctesting.js');
 const runner = require('./test-runner.js');
@@ -32,7 +35,7 @@ app.use(cors({origin: '*'}));
 
 // Index page (static HTML)
 app.route('/')
-  .get(function (req, res) {
+  .get(function (_req, res) {
     res.sendFile(process.cwd() + '/views/index.html');
   }); 
 
@@ -40,7 +43,7 @@ app.route('/')
 fccTestingRoutes(app);
     
 // 404 Not Found Middleware
-app.use(function(req, res, next) {
+app.use(function(_req, res) {
   res.status(404)
     .type('text')
     .send('Not Found');
@@ -52,8 +55,8 @@ let playerList = [];
 let collectiblesList = [];
 
 setInterval(() => {
-  if(collectiblesList.length < 10* playerList.length) {
-    collectiblesList.push({ id: uuid(), x: getRandomNumber(), y: getRandomNumber(), value: 1 });
+  if(collectiblesList.length < 10 * playerList.length) {
+    collectiblesList.push({ id: uuid(), ...getRandomPosition(COLLECTBLE_SIZE), value: 1 });
     io.emit('collectibles-list', collectiblesList);
   }
 }, 1000);
@@ -61,7 +64,7 @@ setInterval(() => {
 io.on('connection', socket => {
   console.log('A user has connected');
 
-  const newPlayer = { id: socket.id, x: getRandomNumber(), y: getRandomNumber(), score: 0 };
+  const newPlayer = { id: socket.id, ...getRandomPosition(PLAYER_SIZE), score: 0 };
   playerList.push(newPlayer);
 
   io.emit('collectibles-list', collectiblesList);

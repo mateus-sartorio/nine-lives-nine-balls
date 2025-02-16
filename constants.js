@@ -1,0 +1,17 @@
+const TEXT_PADDING = 10;
+const FONT_SIZE = 16;
+const CANVAS_WIDTH = 640;
+const CANVAS_HEIGHT = 480;
+const LINE_WIDTH = 1;
+const PLAYER_SIZE = 36;
+const COLLECTBLE_SIZE = 36;
+
+module.exports = {
+  TEXT_PADDING,
+  FONT_SIZE,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+  LINE_WIDTH,
+  PLAYER_SIZE,
+  COLLECTBLE_SIZE
+};

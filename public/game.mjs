@@ -53,6 +53,7 @@ function drawHud(targetContext) {
 
 socket.on('player-list', (payload) => {
   playerList = payload.map(player => new Player({ ...player }));
+  console.log(playerList);
 });
 
 socket.on('update-player', (payload) => {
