@@ -1,7 +1,7 @@
 {
-  "name": "secure-real-time-multiplayer-game",
+  "name": "nine-lives-nine-balls-game",
   "version": "1.0.0",
-  "description": "Information Security 5: Secure Real-Time Multiplayer Game",
+  "description": "Real-Time Multiplayer Game where you controll cats that collect billiard balls",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
