@@ -135,7 +135,7 @@ function update() {
   bufferContext.fillRect(0, 0, buffer.width, buffer.height);
 
   collectiblesList.forEach(collectible => {
-    if(player && distance(player.x, player.y, collectible.x, collectible.y) < PLAYER_SIZE + COLLECTIBLE_SIZE) {
+    if(player && distance(player.x, player.y, collectible.x, collectible.y) < 0.5 * (PLAYER_SIZE + COLLECTIBLE_SIZE)) {
       playAudio(collectItemSoundPlayer);
       player.collision(collectible);
       socket.emit('collect', collectible);
