@@ -22,7 +22,9 @@
     <header>
       <h1>Secure Real Time Multiplayer Game</h1>
     </header>
+    
     <hr style="margin: 25px" />
+    
     <div class="container">
       <canvas 
         ref="game"
@@ -32,12 +34,21 @@
       >
       </canvas>
     </div>
-    <audio
-      id="background-music"
-      src="../public/assets/sound/background_music.mp3"
-      loop
-    >
-    </audio>
+
+    <div>
+      <audio
+        id="background-music"
+        src="../public/assets/sound/background_music.mp3"
+        loop
+      >
+      </audio>
+
+      <audio
+        id="collect-item"
+        src="../public/assets/sound/collect_item.wav"
+      >
+      </audio>
+    </div>
   </body>
   <script src="../public/game.mjs" type="module"></script>
 </html>
