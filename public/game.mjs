@@ -1,7 +1,8 @@
-import Player, { PLAYER_SIZE } from './Player.mjs';
 import Collectible, { COLLECTIBLE_SIZE } from './Collectible.mjs';
+import { FONT_SIZE, LINE_WIDTH, TEXT_PADDING } from './constants.mjs';
+import Player, { PLAYER_SIZE } from './Player.mjs';
+
 import { distance } from './utils.mjs';
-import { TEXT_PADDING, FONT_SIZE, LINE_WIDTH } from './constants.mjs';
 
 const socket = io();
 const canvas = document.getElementById('game-window');
@@ -57,6 +58,11 @@ function drawHud(targetContext) {
 
   targetContext.closePath();
 }
+
+const backgroundMusicPlayer = document.getElementById('background-music');
+document.body.addEventListener('click', () => {
+  backgroundMusicPlayer.play();
+});
 
 socket.on('player-list', (payload) => {
   playerList = payload.map(player => new Player({ ...player }));
