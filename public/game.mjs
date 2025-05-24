@@ -130,6 +130,8 @@ function playAudio(audioElement) {
 }
 
 function update() {
+  handleMovement();
+  
   // Clear buffer with background color
   bufferContext.fillStyle = "#222200";
   bufferContext.fillRect(0, 0, buffer.width, buffer.height);
