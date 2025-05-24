@@ -28,7 +28,6 @@ app.use('/assets', express.static(process.cwd() + '/assets'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//For FCC testing purposes and enables user to connect from outside the hosting platform
 app.use(cors({origin: '*'})); 
 
 // Index page (static HTML)
@@ -92,7 +91,7 @@ io.on('connection', socket => {
   });
 });
 
-// Set up server and tests
+// Set up server
 server.listen(portNum, () => {
   console.log(`Listening on port ${portNum}`);
 });

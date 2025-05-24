@@ -80,12 +80,14 @@ socket.on('collectibles-list', (payload) => {
 
 // Event listeners to update key states
 document.addEventListener('keydown', (event) => {
-  keysPressed[event.key] = true; // Mark key as pressed
+  // Mark key as pressed
+  keysPressed[event.key] = true;
   handleMovement();
 });
 
 document.addEventListener('keyup', (event) => {
-  keysPressed[event.key] = false; // Mark key as released
+  // Mark key as released
+  keysPressed[event.key] = false;
   handleMovement();
 });
 
@@ -94,7 +96,6 @@ function areKeysPressed(...keys) {
   return keys.every(key => keysPressed[key]);
 }
 
-// Example usage in your game loop or event handler
 function handleMovement() {
   if (areKeysPressed('w', 'a')) {
     player.movePlayer("DIAGONAL_UP_LEFT");
@@ -124,6 +125,7 @@ function handleMovement() {
   socket.emit('player-move', player);
 }
 
+// Reset audio and play it
 function playAudio(audioElement) {
   audioElement.currentTime = 0;
   audioElement.play();
