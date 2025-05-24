@@ -64,9 +64,10 @@ document.body.addEventListener('click', () => {
   backgroundMusicPlayer.play();
 });
 
+const collectItemSoundPlayer = document.getElementById('collect-item');
+
 socket.on('player-list', (payload) => {
   playerList = payload.map(player => new Player({ ...player }));
-  console.log(playerList)
 });
 
 socket.on('update-player', (payload) => {
@@ -123,6 +124,11 @@ function handleMovement() {
   socket.emit('player-move', player);
 }
 
+function playAudio(audioElement) {
+  audioElement.currentTime = 0;
+  audioElement.play();
+}
+
 function update() {
   // Clear buffer with background color
   bufferContext.fillStyle = "#222200";
@@ -130,6 +136,7 @@ function update() {
 
   collectiblesList.forEach(collectible => {
     if(player && distance(player.x, player.y, collectible.x, collectible.y) < PLAYER_SIZE + COLLECTIBLE_SIZE) {
+      playAudio(collectItemSoundPlayer);
       player.collision(collectible);
       socket.emit('collect', collectible);
       socket.emit('player-move', player);
