@@ -149,7 +149,6 @@ function update() {
 
   drawHud(bufferContext);
 
-  console.log(playerList);
   playerList.forEach(player => player.draw(bufferContext));
   collectiblesList.forEach(collectible => collectible.draw(bufferContext));
 

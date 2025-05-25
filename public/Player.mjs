@@ -68,7 +68,6 @@ class Player {
   }
 
   draw(context) {
-    console.log(this.playerImageIndex, playerImages[this.playerImageIndex - 1])
     if (playerImages[this.playerImageIndex - 1].complete) {
       context.drawImage(playerImages[this.playerImageIndex - 1], this.x, this.y, PLAYER_SIZE, PLAYER_SIZE);
     }
