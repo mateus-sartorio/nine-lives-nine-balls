@@ -15,6 +15,10 @@
   <img src="./assets/drawing.png" alt="" width="80%"/>
 </div>
 
+
+https://github.com/user-attachments/assets/6f6a0c12-1c17-4ece-a65f-65360f7d95a6
+
+
 <br/>
 
 ## 🍄 Project's philosophy
