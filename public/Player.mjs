@@ -22,15 +22,20 @@ const playerMoviments = new Map([
   [ "DIAGONAL_DOWN_LEFT", { x: -diagnonalMovementCorrectionFactor, y: diagnonalMovementCorrectionFactor } ]
 ]);
 
+const playerImages = Array.from({ length: 9 }, (_, i) => i + 1).map(playerImageIndex => {
+  const image = new Image();
+  image.src = `/public/assets/player/cat_${playerImageIndex}.png`;
+
+  return image;
+});
+
 class Player {
   constructor({ x, y, score, id, playerImageIndex }) {
     this.x = x;
     this.y = y;
     this.score = score;
     this.id = id;
-    this.playerImage =  new Image();
     this.playerImageIndex = playerImageIndex;
-    this.playerImage.src = `/public/assets/player/cat_${playerImageIndex}.png`;
   }
 
   movePlayer(dir) {
@@ -63,8 +68,9 @@ class Player {
   }
 
   draw(context) {
-    if (this.playerImage.complete) {
-      context.drawImage(this.playerImage, this.x, this.y, PLAYER_SIZE, PLAYER_SIZE);
+    console.log(this.playerImageIndex, playerImages[this.playerImageIndex - 1])
+    if (playerImages[this.playerImageIndex - 1].complete) {
+      context.drawImage(playerImages[this.playerImageIndex - 1], this.x, this.y, PLAYER_SIZE, PLAYER_SIZE);
     }
   }
 }
