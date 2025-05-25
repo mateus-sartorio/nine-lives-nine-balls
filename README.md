@@ -10,22 +10,17 @@
 
 ### Let's see which kitten will come out on top on this battle of who can get the most billiard balls!
 
-
-<div align="center">
-  <img src="./assets/drawing.png" alt="" width="80%"/>
-</div>
-
-
 https://github.com/user-attachments/assets/6f6a0c12-1c17-4ece-a65f-65360f7d95a6
 
-
 <br/>
+
 
 ## 🍄 Project's philosophy
 
 This is a simple project demonstrating how to create a real time multiplayer game on the browser without need for any fancy frameworks.
 
 <br/>
+
 
 ## ⚙️ Configure and run locally
 
@@ -49,7 +44,7 @@ node --version
 Clone the repository locally. Then, navigate to the directory of the cloned repository:
 
 ```bash
-git clone https://github.com/mateus-sartorio/nine-lives-nine-balls frontend
+git clone https://github.com/mateus-sartorio/nine-lives-nine-balls
 cd nine-lives-nine-balls
 ```
 
@@ -69,6 +64,24 @@ If everything went well, you are now running the app in the development mode. Op
 
 <br/>
 
+
+## 📋 Disclaimer:
+
+This project was based on the Secure Real Time Multiplayer Game project from [freeCodeCamp](https://www.freecodecamp.org/learn/information-security/information-security-projects/secure-real-time-multiplayer-game).
+
+### Sound assets:
+
+#### Background music:
+
+Calm background Music by Bertsz -- https://freesound.org/s/671900/ -- License: Creative Commons 0
+
+#### Item collection:
+
+3 up fast 1 by Leszek_Szary -- https://freesound.org/s/171583/ -- License: Creative Commons 0
+
+<br/>
+
+
 ## ⚖️ License:
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -85,20 +98,3 @@ This program is released under license GNU GPL v3+ license.
 ## 🔧 Support:
 
 Kindly report any issues with the application on its official repo on [github.com/mateus-sartorio/nine-lives-nine-balls](https://github.com/mateus-sartorio/nine-lives-nine-balls).
-
-<br/>
-
-## 📋 Disclaimer:
-
-This project was based on the Secure Real Time Multiplayer Game project from [freeCodeCamp](https://www.freecodecamp.org/learn/information-security/information-security-projects/secure-real-time-multiplayer-game).
-
-### Sound assets:
-
-#### Background music:
-
-Calm background Music by Bertsz -- https://freesound.org/s/671900/ -- License: Creative Commons 0
-
-
-#### Item collection:
-
-3 up fast 1 by Leszek_Szary -- https://freesound.org/s/171583/ -- License: Creative Commons 0
