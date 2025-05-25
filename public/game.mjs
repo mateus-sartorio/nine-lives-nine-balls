@@ -56,7 +56,7 @@ document.addEventListener('keyup', (event) => {
 
 setInterval(() => {
   update();
-}, 40);
+}, 32);
 
 // Reset audio and play it
 function playAudio(audioElement) {
@@ -149,6 +149,7 @@ function update() {
 
   drawHud(bufferContext);
 
+  console.log(playerList);
   playerList.forEach(player => player.draw(bufferContext));
   collectiblesList.forEach(collectible => collectible.draw(bufferContext));
 
