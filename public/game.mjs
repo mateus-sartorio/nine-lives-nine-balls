@@ -24,41 +24,6 @@ let player;
 let playerList = [];
 let collectiblesList = [];
 
-function drawHud(targetContext) {
-  targetContext.font = `${FONT_SIZE}px "Press Start 2D"`;
-  targetContext.fillStyle = "white";
-
-  targetContext.beginPath();
-  targetContext.textAlign = "start";
-  targetContext.fillText(`Controls: WASD`, TEXT_PADDING, FONT_SIZE + TEXT_PADDING);
-  targetContext.closePath();
-  
-  targetContext.beginPath();
-  targetContext.textAlign = "end";
-  targetContext.fillText(`Rank: ${ player?.calculateRank(playerList) ?? 0 } / ${playerList.length}`, canvas.width - TEXT_PADDING, FONT_SIZE + TEXT_PADDING);
-  targetContext.closePath();
-
-  targetContext.beginPath();
-  const text = `Score: ${player?.score ?? 0}`;
-  const textWidth = targetContext.measureText(text).width;
-  targetContext.textAlign = "start";
-  targetContext.fillText(text, (canvas.width - textWidth)/2, FONT_SIZE + TEXT_PADDING);
-  targetContext.closePath();
-
-  targetContext.beginPath();
-  targetContext.lineWidth = LINE_WIDTH;
-  targetContext.strokeStyle = 'white';
-  
-  targetContext.strokeRect(
-    TEXT_PADDING,
-    2 * TEXT_PADDING + FONT_SIZE,
-    canvas.width - 2 * TEXT_PADDING,
-    canvas.height - 3 * TEXT_PADDING - FONT_SIZE
-  );
-
-  targetContext.closePath();
-}
-
 const backgroundMusicPlayer = document.getElementById('background-music');
 document.body.addEventListener('click', () => {
   backgroundMusicPlayer.play();
@@ -82,14 +47,22 @@ socket.on('collectibles-list', (payload) => {
 document.addEventListener('keydown', (event) => {
   // Mark key as pressed
   keysPressed[event.key] = true;
-  handleMovement();
 });
 
 document.addEventListener('keyup', (event) => {
   // Mark key as released
   keysPressed[event.key] = false;
-  handleMovement();
 });
+
+setInterval(() => {
+  update();
+}, 40);
+
+// Reset audio and play it
+function playAudio(audioElement) {
+  audioElement.currentTime = 0;
+  audioElement.play();
+}
 
 // Function to check if multiple keys are pressed
 function areKeysPressed(...keys) {
@@ -125,19 +98,42 @@ function handleMovement() {
   socket.emit('player-move', player);
 }
 
-// Reset audio and play it
-function playAudio(audioElement) {
-  audioElement.currentTime = 0;
-  audioElement.play();
+function drawHud(targetContext) {
+  targetContext.font = `${FONT_SIZE}px "Press Start 2D"`;
+  targetContext.fillStyle = "white";
+
+  targetContext.beginPath();
+  targetContext.textAlign = "start";
+  targetContext.fillText(`Controls: WASD`, TEXT_PADDING, FONT_SIZE + TEXT_PADDING);
+  targetContext.closePath();
+  
+  targetContext.beginPath();
+  targetContext.textAlign = "end";
+  targetContext.fillText(`Rank: ${ player?.calculateRank(playerList) ?? 0 } / ${playerList.length}`, canvas.width - TEXT_PADDING, FONT_SIZE + TEXT_PADDING);
+  targetContext.closePath();
+
+  targetContext.beginPath();
+  const text = `Score: ${player?.score ?? 0}`;
+  const textWidth = targetContext.measureText(text).width;
+  targetContext.textAlign = "start";
+  targetContext.fillText(text, (canvas.width - textWidth)/2, FONT_SIZE + TEXT_PADDING);
+  targetContext.closePath();
+
+  targetContext.beginPath();
+  targetContext.lineWidth = LINE_WIDTH;
+  targetContext.strokeStyle = 'white';
+  
+  targetContext.strokeRect(
+    TEXT_PADDING,
+    2 * TEXT_PADDING + FONT_SIZE,
+    canvas.width - 2 * TEXT_PADDING,
+    canvas.height - 3 * TEXT_PADDING - FONT_SIZE
+  );
+
+  targetContext.closePath();
 }
 
 function update() {
-  handleMovement();
-  
-  // Clear buffer with background color
-  bufferContext.fillStyle = "#222200";
-  bufferContext.fillRect(0, 0, buffer.width, buffer.height);
-
   collectiblesList.forEach(collectible => {
     if(player && distance(player.x, player.y, collectible.x, collectible.y) < 0.5 * (PLAYER_SIZE + COLLECTIBLE_SIZE)) {
       playAudio(collectItemSoundPlayer);
@@ -147,16 +143,18 @@ function update() {
     }
   });
 
+  // Clear buffer with background color
+  bufferContext.fillStyle = "#222200";
+  bufferContext.fillRect(0, 0, buffer.width, buffer.height);
+
   drawHud(bufferContext);
 
   playerList.forEach(player => player.draw(bufferContext));
   collectiblesList.forEach(collectible => collectible.draw(bufferContext));
 
   // Draw buffer to main canvas
-  context.clearRect(0, 0, canvas.width, canvas.height);
+  // context.clearRect(0, 0, canvas.width, canvas.height);
   context.drawImage(buffer, 0, 0);
-}
 
-setInterval(() => {
-  update();
-}, 32);
+  handleMovement();
+}
